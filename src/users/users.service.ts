@@ -71,4 +71,13 @@ export class UsersService {
     user.password = await bcrypt.hash(newPassword, 12);
     await this.userRepository.getEntityManager().persist(user).flush();
   }
+
+  async setRefreshToken(userId: string, refreshToken: string): Promise<void> {
+    const user = await this.userRepository.findOne({ id: userId });
+    if (!user) {
+      throw new NotFoundException('A felhasználó nem található');
+    }
+    user.refreshTokenHash = await bcrypt.hash(refreshToken, 12);
+    await this.userRepository.getEntityManager().flush();
+  }
 }

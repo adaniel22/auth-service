@@ -19,6 +19,9 @@ export class User {
 
   @Property({ onCreate: () => new Date() }) createdAt: Date & Opt = new Date();
 
+  @Property({ hidden: true, nullable: true })
+  refreshTokenHash?: string;
+
   @BeforeCreate()
   async hashPassword(): Promise<void> {
     this.password = await bcrypt.hash(this.password, 12);

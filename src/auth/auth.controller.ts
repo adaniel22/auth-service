@@ -11,6 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { JwtRefreshGuard } from './jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -26,5 +27,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtRefreshGuard)
+  refresh(@Request() req) {
+    return this.authService.refresh(req.user.userId, req.user.refreshToken);
   }
 }
