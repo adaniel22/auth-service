@@ -13,6 +13,13 @@ import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtRefreshGuard } from './jwt-refresh.guard';
 
+interface AuthenticatedRequest {
+  user: {
+    userId: string;
+    email: string;
+    refreshToken?: string;
+  };
+}
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -25,14 +32,14 @@ export class AuthController {
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  getProfile(@Request() req) {
+  getProfile(@Request() req: AuthenticatedRequest) {
     return req.user;
   }
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshGuard)
-  refresh(@Request() req) {
-    return this.authService.refresh(req.user.userId, req.user.refreshToken);
+  refresh(@Request() req: AuthenticatedRequest) {
+    return this.authService.refresh(req.user.userId, req.user.refreshToken!);
   }
 }
