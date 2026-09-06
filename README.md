@@ -53,8 +53,11 @@ Normally you do not start this service on its own — it runs as part of the Doc
 
 Configuration is read from environment variables; `.env.example` lists all of them (database connection, `PORT`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `JWT_REFRESH_EXPIRES`). Copy it to `.env` and fill in your own values — never commit real secrets.
 
-Database migrations are applied with:
+## Migrations
 
+When the service runs in the Docker Compose stack, database migrations are **automatic**. On container startup an entrypoint script applies any pending migrations before the app starts — so there is no manual step when running via `docker compose`.
+
+For local development outside a container, you can run migrations manually:
 ```bash
 npm run mikro-orm -- migration:up
 ```
